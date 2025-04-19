@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Ataque Tribal Wars</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Calculadora de Envio - Tribal Wars</h2>
+
+  <label for="viagem">Tempo de Viagem (hh:mm:ss):</label>
+  <input type="text" id="viagem" placeholder="Ex: 11:54:22" required>
+
+  <label for="chegada">Horário de Chegada (aaaa-mm-dd hh:mm:ss):</label>
+  <input type="text" id="chegada" placeholder="Ex: 2025-04-17 23:50:00" required>
+
+  <button onclick="calcular()">Calcular Horário de Envio</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    function calcular() {
+      const tempoViagem = document.getElementById("viagem").value;
+      const horarioChegada = document.getElementById("chegada").value;
+
+      try {
+        const [h, m, s] = tempoViagem.split(":").map(Number);
+        const [data, hora] = horarioChegada.split(" ");
+        const [ano, mes, dia] = data.split("-").map(Number);
+        const [horas, minutos, segundos] = hora.split(":").map(Number);
+
+        const chegada = new Date(ano, mes - 1, dia, horas, minutos, segundos);
+        const envio = new Date(chegada.getTime() - (h * 3600 + m * 60 + s) * 1000);
+
+        const pad = (n) => n.toString().padStart(2, '0');
+        const resultado = `${envio.getFullYear()}-${pad(envio.getMonth()+1)}-${pad(envio.getDate())} `
+                        + `${pad(envio.getHours())}:${pad(envio.getMinutes())}:${pad(envio.getSeconds())}`;
+
+        document.getElementById("resultado").innerText = `🕓 Enviar ataque às: ${resultado}`;
+      } catch {
+        document.getElementById("resultado").innerText = "Erro ao calcular. Verifique os formatos.";
+      }
+    }
+  </script>
+
+</body>
+</html>
